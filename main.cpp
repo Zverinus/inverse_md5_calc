@@ -5,8 +5,15 @@
 #include "md5.hpp"
 
 
-void start_calculation(const std::string& hash, const std::string& permutation, const std::string& config) {
+void comp_permutation() {
 
+}
+
+
+void start_calculation(const std::string& hash, std::string& permutation) {
+    do {
+
+    } while (std::next_permutation(permutation.begin(), permutation.end()));
 }
 
 
@@ -21,22 +28,27 @@ int main(int argc, char* argv[]) {
         if (!temp_r.is_open()) {
             std::cout << "TEMP FILE IS INVALID\nTRY TO START NEW EXECUTION\n";
         } else {
-            std::string hash, permutation, config;
+            std::string hash, permutation;
             if (!std::getline(temp_r, hash)) {
                 std::cout << "TEMP FILE IS INVALID\nTRY TO START NEW EXECUTION\n";
             } else if (!std::getline(temp_r, permutation)) {
                 std::cout << "TEMP FILE IS INVALID\nTRY TO START NEW EXECUTION\n";
-            } else if (!std::getline(temp_r, config)) {
-                std::cout << "TEMP FILE IS INVALID\nTRY TO START NEW EXECUTION\n";
             } else {
                 temp_r.close();
-                start_calculation(hash, permutation, config);
+                start_calculation(hash, permutation);
             }
         }
     } else if (argc == 3) {
-        std::string hash(argv[1]), permutation(argv[1]), config(argv[2]);
-        std::sort(permutation.begin(), permutation.end());
-        start_calculation(hash, permutation, config);
+        std::cout << std::thread::hardware_concurrency();
+        std::string hash(argv[1]), permutation, config_path(argv[2]);
+        std::ifstream config_file(config_path);
+        if (!config_file.is_open()) {
+            std::cout << "CONFIG FILE PATH IS INVALID\n";
+        } else {
+            std::getline(config_file, permutation);
+            std::sort(permutation.begin(), permutation.end());
+            start_calculation(hash, permutation);
+        }
 
         /*std::string hash_value = "e8129842ceb05ca859946a38ff29acce";
 
